@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Talkee.Models
 {
-    public class MessagingDbContext: DbContext
+    public class MessagingDbContext: IdentityDbContext
     {
         public MessagingDbContext(DbContextOptions<MessagingDbContext> options)
             :base(options)
