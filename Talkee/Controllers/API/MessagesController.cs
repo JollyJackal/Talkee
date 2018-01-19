@@ -62,6 +62,7 @@ namespace Talkee.Controllers.API
 
             _context.Entry(message).State = EntityState.Modified;
 
+            // If we are editing the message text, need to keep a history of the edit
             var existingMessage = await _context.Messages.SingleOrDefaultAsync(m => m.Id == id);
 
             if (existingMessage == null)

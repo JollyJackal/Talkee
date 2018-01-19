@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,9 +9,10 @@ namespace Talkee.Models
     {
         public int Id { get; set; }
 
-        //public int UserId { get; set; }
+        [Required]
+        public string UserId { get; set; }
 
-        //public User User { get; set; }
+        public IdentityUser User { get; set; }
 
         public int ConversationId { get; set; }
 
