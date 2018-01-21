@@ -22,9 +22,9 @@ namespace Talkee.Controllers.API
 
         // GET: api/Conversations
         [HttpGet]
-        public IEnumerable<Conversation> GetConversations()
+        public IActionResult GetConversations()
         {
-            return _context.Conversations;
+            return Ok(_context.Conversations);
         }
 
         // GET: api/Conversations/5

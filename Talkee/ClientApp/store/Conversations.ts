@@ -41,17 +41,17 @@ type KnownAction = RequestConversationsAction | ReceiveConversationsAction;
 
 export const actionCreators = {
   requestConversations: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
-    // Only load data if it's something we don't already have (and are not already loading)
-    //if (startDateIndex !== getState().weatherForecasts.startDateIndex) {
-      let fetchTask = fetch(`api/Conversations`)
-        .then(response => response.json() as Promise<Conversation[]>)
-        .then(data => {
-          dispatch({ type: 'RECEIVE_CONVERSATIONS', conversations: data });
-        });
+      // Only load data if it's something we don't already have (and are not already loading)
+      if (!getState().conversations.isLoading) {
+          let fetchTask = fetch(`api/Conversations`)
+            .then(response => response.json() as Promise<Conversation[]>)
+            .then(data => {
+              dispatch({ type: 'RECEIVE_CONVERSATIONS', conversations: data });
+            });
 
-      addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
-      dispatch({ type: 'REQUEST_CONVERSATIONS' });
-    //}
+          addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
+          dispatch({ type: 'REQUEST_CONVERSATIONS' });
+      }
   }
 };
 

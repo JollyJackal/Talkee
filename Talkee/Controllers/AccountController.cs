@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -32,7 +33,7 @@ namespace Talkee.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState); //TODO Want to pass ModelState, or just return bad request?
             }
 
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
@@ -46,11 +47,26 @@ namespace Talkee.Controllers
             //var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
 
             var user = await _userManager.FindByEmailAsync(model.Email);
-            //var roles = await _userManager.GetRolesAsync(user);
             var claims = await _userManager.GetClaimsAsync(user);
 
             var jwt = Helper.GenerateJwtToken(_configuration, user, claims);
-            return Ok(jwt);
+
+            var responseDto = new LoginResponseDto
+            {
+                Token = jwt,
+                User = new UserDto
+                {
+                    Id = user.Id,
+                    Name = user.UserName
+                }
+            };
+
+            //var responseJson = "{'token':'" +jwt + "','user':" + "}";
+
+            //return Ok(jwt);
+            var jsonResponse = Json(responseDto);
+
+            return Ok(jsonResponse.Value);
         }
 
         [HttpPost]

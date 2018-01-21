@@ -5,22 +5,24 @@ import { ApplicationState } from '../store';
 import * as ConversationsState from '../store/Conversations';
 
 // At runtime, Redux will merge together...
-type WeatherForecastProps =
+type ConversationsProps =
   ConversationsState.ConversationsState        // ... state we've requested from the Redux store
   & typeof ConversationsState.actionCreators      // ... plus action creators we've requested
   & RouteComponentProps<{ }>; // ... plus incoming routing parameters
 
-class FetchData extends React.Component<WeatherForecastProps, {}> {
+class Conversations extends React.Component<ConversationsProps, {}> {
   componentWillMount() {
     // This method runs when the component is first added to the page
     //let startDateIndex = parseInt(this.props.match.params.startDateIndex) || 0;
-    this.props.requestConversations();
+      this.props.requestConversations();
+      console.log('componentWillMount');
   }
 
-  componentWillReceiveProps(nextProps: WeatherForecastProps) {
+  componentWillReceiveProps(nextProps: ConversationsProps) {
     // This method runs when incoming props (e.g., route params) change
     //let startDateIndex = parseInt(nextProps.match.params.startDateIndex) || 0;
-    this.props.requestConversations();
+      this.props.requestConversations();
+      console.log('componentWillReceiveProps');
   }
 
   public render() {
@@ -54,4 +56,4 @@ class FetchData extends React.Component<WeatherForecastProps, {}> {
 export default connect(
   (state: ApplicationState) => state.conversations, // Selects which state properties are merged into the component's props
   ConversationsState.actionCreators                 // Selects which action creators are merged into the component's props
-)(FetchData) as typeof FetchData;
+)(Conversations) as typeof Conversations;
