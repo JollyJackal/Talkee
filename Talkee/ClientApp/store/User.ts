@@ -1,12 +1,14 @@
 ﻿import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
+import * as H from 'history';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface UserState {
     isLoading: boolean;
+    authenticated: boolean;
     user: User;
     //loginErrors: string[]; //TODO only if we want to return these from server
 }
@@ -52,12 +54,12 @@ type KnownAction = LoginRequestAction | LoginSuccessAction | LoginFailureAction 
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    loginRequest: (email: string, password: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    loginRequest: (values: { email: string, password: string }, history: H.History): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
         if ( !getState().user.isLoading ) {
             const payload = {
-                Email: email,
-                Password: password,
+                Email: values.email,
+                Password: values.password,
             }
             
             let fetchTask = fetch(`Account/Login`, {
@@ -75,12 +77,11 @@ export const actionCreators = {
             })
             .then(
                 data => {
-                    console.log(data);
                     localStorage.setItem('token', data.token);
                     dispatch({ type: LOGIN_SUCCESS, user: data.user });
+                    history.push('/');
                 },
                 error => {
-                    console.log(error);
                     dispatch({ type: LOGIN_FAILURE });
                 }
             );
@@ -89,13 +90,17 @@ export const actionCreators = {
             dispatch({ type: LOGIN_REQUEST });
         }
     },
-    //logoutRequest: 
+    logout: (history: H.History): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        localStorage.clear();
+        dispatch({ type: LOGOUT });
+        history.push('/');
+    }
 };
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: UserState = { user: {id: '', name: ''}, isLoading: false };
+const unloadedState: UserState = { user: { id: '', name: '' }, authenticated: false, isLoading: false };
 
 export const reducer: Reducer<UserState> = (state: UserState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
@@ -105,6 +110,7 @@ export const reducer: Reducer<UserState> = (state: UserState, incomingAction: Ac
         case LOGIN_SUCCESS:
             return {
                 user: action.user,
+                authenticated: true,
                 isLoading: false
             };
         case LOGIN_FAILURE:

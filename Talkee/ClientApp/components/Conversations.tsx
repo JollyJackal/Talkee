@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
-import * as ConversationsState from '../store/Conversations';
+import * as ConversationsStore from '../store/Conversations';
 
 // At runtime, Redux will merge together...
 type ConversationsProps =
-  ConversationsState.ConversationsState        // ... state we've requested from the Redux store
-  & typeof ConversationsState.actionCreators      // ... plus action creators we've requested
+  ConversationsStore.ConversationsState        // ... state we've requested from the Redux store
+  & typeof ConversationsStore.actionCreators      // ... plus action creators we've requested
   & RouteComponentProps<{ }>; // ... plus incoming routing parameters
 
 class Conversations extends React.Component<ConversationsProps, {}> {
@@ -54,6 +54,6 @@ class Conversations extends React.Component<ConversationsProps, {}> {
 }
 
 export default connect(
-  (state: ApplicationState) => state.conversations, // Selects which state properties are merged into the component's props
-  ConversationsState.actionCreators                 // Selects which action creators are merged into the component's props
+    (state: ApplicationState) => state.conversations, // Selects which state properties are merged into the component's props
+    ConversationsStore.actionCreators                 // Selects which action creators are merged into the component's props
 )(Conversations) as typeof Conversations;

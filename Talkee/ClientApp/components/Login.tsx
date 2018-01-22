@@ -4,12 +4,12 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import * as Form from 'redux-form';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
-import * as UserState from '../store/User';
+import * as UserStore from '../store/User';
 
 // At runtime, Redux will merge together...
 type LoginProps =
-    UserState.UserState        // ... state we've requested from the Redux store
-    & typeof UserState.actionCreators      // ... plus action creators we've requested
+    UserStore.UserState        // ... state we've requested from the Redux store
+    & typeof UserStore.actionCreators      // ... plus action creators we've requested
     & RouteComponentProps<{}>
     & Form.InjectedFormProps<formValues>; // ... plus incoming routing parameters
 
@@ -21,7 +21,7 @@ interface formValues {
 class Login extends React.Component<LoginProps, {}> {
     submit = (values: formValues) => {
         //this.props.loginRequest(values, this.props.history);
-        this.props.loginRequest(values.email, values.password);
+        this.props.loginRequest(values, this.props.history);
     }
 
     errorMessage() {
@@ -81,5 +81,5 @@ const reduxFormSignin = Form.reduxForm<formValues>({
 // See: https://stackoverflow.com/questions/46477939/typescript-errors-when-using-redux-form-with-react-redux-connect
 export default connect<{}, {}, {}>(
     (state: ApplicationState) => state.user, // Selects which state properties are merged into the component's props
-    UserState.actionCreators                 // Selects which action creators are merged into the component's props
+    UserStore.actionCreators                 // Selects which action creators are merged into the component's props
 )(reduxFormSignin) as typeof Login;

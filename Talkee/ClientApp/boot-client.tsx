@@ -1,5 +1,7 @@
 import './css/site.css';
 import 'bootstrap';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+//import './css/bootstrap-slate.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
@@ -10,6 +12,8 @@ import configureStore from './configureStore';
 import { ApplicationState }  from './store';
 import * as RoutesModule from './routes';
 let routes = RoutesModule.routes;
+
+//TODO look into persisting state on refresh: https://www.npmjs.com/package/redux-persist
 
 // Create browser history to use in the Redux store
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href')!;

@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "react-bootstrap": "~0.32.0",
+    "react-redux-form": "^1.16.4",
     "redux-form": "^7.2.1"
   }
 }
