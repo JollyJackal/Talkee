@@ -43,7 +43,11 @@ export const actionCreators = {
   requestConversations: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
       // Only load data if it's something we don't already have (and are not already loading)
       if (!getState().conversations.isLoading) {
-          let fetchTask = fetch(`api/Conversations`)
+          let fetchTask = fetch(`api/Conversations`, {
+              headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+              },
+          })
             .then(response => response.json() as Promise<Conversation[]>)
             .then(data => {
               dispatch({ type: 'RECEIVE_CONVERSATIONS', conversations: data });
