@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -87,25 +88,35 @@ namespace Talkee.Controllers
             if (!result.Succeeded)
             {
                 //TODO See how this works. If the format is bad, look at it again
-                var errorText = "";
+                var errText = new StringBuilder();
+
                 foreach (var error in result.Errors)
-                    errorText += ("Error: " + error.Description + "/n");
+                {
+                    errText.Append("Error: ");
+                    errText.Append(error.Description);
+                    errText.Append("/n");
+                }
                 //ModelState.AddModelError(string.Empty, error.Description);
 
-                return StatusCode(500, errorText);
+                return StatusCode(500, errText.ToString());
             }
 
+            //TODO Remove before prod
             result = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Administrator"));
 
             if (!result.Succeeded)
             {
                 //TODO See how this works. If the format is bad, look at it again
-                var errorText = "";
+                var errText = new StringBuilder();
                 foreach (var error in result.Errors)
-                    errorText += ("Error: " + error.Description + "/n");
+                {
+                    errText.Append("Error: ");
+                    errText.Append(error.Description);
+                    errText.Append("/n");
+                }
                 //ModelState.AddModelError(string.Empty, error.Description);
 
-                return StatusCode(500, errorText);
+                return StatusCode(500, errText.ToString());
             }
 
             return Ok();
